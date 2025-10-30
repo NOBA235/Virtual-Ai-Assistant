@@ -36,7 +36,7 @@ export const UserProvider = ({ children }) => {
     };
   }, []);
 
-t
+
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     if (savedUser) {
