@@ -37,8 +37,8 @@ const model = genAI.getGenerativeModel({
   }
 });
 
-console.log("🤖 Using AI Model:", modelName);
-console.log("🎭 Custom personality: Noba Assistant");
+console.log("Using AI Model:", modelName);
+console.log("Custom personality: Noba Assistant");
 
 // Test routes
 router.get("/test", (req, res) => {

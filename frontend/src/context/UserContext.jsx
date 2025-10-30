@@ -36,71 +36,72 @@ export const UserProvider = ({ children }) => {
     };
   }, []);
 
-  // Check for existing user on mount
+t
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     if (savedUser) {
       setUser(savedUser);
       setConversation([{
-        speaker: 'ai', 
+        speaker: 'ai',
         text: `Welcome back ${savedUser}! How can I help you today?`,
         timestamp: new Date()
       }]);
     }
   }, []);
 
-  // AI response function
+ 
   const aiResponse = async (prompt) => {
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const backendUrl = import.meta.env.VITE_API_URL; 
+      console.log("Backend connected to:", backendUrl);
+
       const res = await fetch(`${backendUrl}/api/ai/respond`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ prompt }),
       });
-      
+
       if (!res.ok) {
         throw new Error(`Backend error: ${res.status}`);
       }
-      
+
       const data = await res.json();
       return data.reply;
     } catch (err) {
       console.error('AI request failed:', err);
-      return "`Sorry,Im unable to answer right now. Please try again later.`";
+      return "Sorry, I'm unable to answer right now. Please try again later.";
     }
   };
 
   // Speech function
   const speak = (text) => {
     if (!text || isSpeaking) return;
-    
-    // Cancel any ongoing speech
+
     speechSynthesis.cancel();
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
-    
+
     utterance.rate = 0.9;
     utterance.pitch = 1;
     utterance.volume = 1;
-    
+
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
-    
+
     speechSynthesis.speak(utterance);
   };
 
   const addMessage = (speaker, text) => {
-    const newMessage = { 
-      speaker, 
-      text, 
-      timestamp: new Date() 
+    const newMessage = {
+      speaker,
+      text,
+      timestamp: new Date()
     };
     setConversation(prev => [...prev, newMessage]);
   };
@@ -113,11 +114,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const response = await aiResponse(inputText);
-      
-      
       addMessage('ai', response);
-      
-      
       speak(response);
     } catch (error) {
       console.error('Error in handleUserInput:', error);
@@ -127,15 +124,13 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Login function
   const login = (userName) => {
     const trimmedName = userName.trim();
     setUser(trimmedName);
     localStorage.setItem('username', trimmedName);
-    addMessage('ai',` Hello ${trimmedName}! I'm your AI assistant. How can I help you today?`);
+    addMessage('ai', `Hello ${trimmedName}! I'm your AI assistant. How can I help you today?`);
   };
 
-  // Logout function
   const logout = () => {
     setUser(null);
     setConversation([]);
@@ -163,5 +158,5 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
-  );
+  );
 };
