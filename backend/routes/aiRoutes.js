@@ -33,7 +33,7 @@ const model = genAI.getGenerativeModel({
     temperature: 0.7,
     topP: 0.8,
     topK: 40,
-    maxOutputTokens: 2048,
+    maxOutputTokens: 512,
   }
 });
 
