@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: [
-    "https://virtual-ai-assistant.vercel.app",
+    "https://markey1.vercel.app",,
     "http://localhost:5173" 
   ],
   methods: ["GET", "POST"],
